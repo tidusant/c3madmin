@@ -36,4 +36,6 @@ jobs:
           echo test, and deploy your project.
       # Runs a next build for project
       - name: Run nextjs build
-        run: npm run build
+        run: |
+          npm install
+          npm run build
