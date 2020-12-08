@@ -1,7 +1,12 @@
+
 import Head from 'next/head'
 import Layout from '../components/layout'
-import withAuth from '../hocs/withAuth';
-export default withAuth(function Home() {
+
+export default function Home() {
+  
+
+ 
+
   return (
     <Layout>
       
@@ -51,4 +56,10 @@ export default withAuth(function Home() {
       
     </Layout>
   )
-})
+}
+export async function getInitialProps(context) {
+  console.log(context);
+  return {
+    props: {}, // will be passed to the page component as props
+  }
+}

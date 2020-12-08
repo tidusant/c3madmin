@@ -1,7 +1,7 @@
 import {encDat2,decDat} from "./crypto";
-
+import Cookies from 'js-cookie'
 export function GetData(requestUrl,data,userstate,fn){
-
+    console.log('getdata');
     let rs={status:0,error:"error in request",message:"",data:{}}
     let sex= Cookies.get("sex")
 
@@ -12,7 +12,7 @@ export function GetData(requestUrl,data,userstate,fn){
         return
     }
     Log("call: "+requestUrl+" data:"+data+" - "+sex)
-    fetch(process.env.REACT_APP_API_URL+encDat2(requestUrl,7),{
+    fetch(process.env.NEXT_PUBLIC_API_URL+encDat2(requestUrl,7),{
         method: 'POST',
         body: "data="+encDat2(sex+"|"+data,9),
         headers: {
@@ -66,7 +66,7 @@ export function GetData(requestUrl,data,userstate,fn){
 }
 
 export function Log(message){
-    if(process.env.REACT_APP_DEBUG==="true"){
+    if(process.env.NEXT_PUBLIC_DEBUG==="true"){
         console.log(message)
     }
 }

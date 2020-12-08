@@ -1,4 +1,4 @@
-import Image from 'next/image'
+
 
 export default function PageTop() {
     return <div className="page-top clearfix" >
@@ -9,7 +9,7 @@ export default function PageTop() {
     <div className="user-profile clearfix">
         <div className="al-user-profile dropdown" >
             <a className="profile-toggle-link dropdown-toggle">
-                <Image src="/images/blur-admin/app/profile/Nasta.png" alt="" width="45" height="45"/>
+                <img src="/images/blur-admin/app/profile/Nasta.png" alt="" width="45" height="45"/>
             </a>
             <ul className="top-dropdown-menu profile-dropdown dropdown-menu" >
                 <li><i className="dropdown-arr"></i></li>

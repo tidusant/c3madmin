@@ -10,12 +10,14 @@ export function makeid(num)
     return text;
 }
 function base64encode(input) {
-    return btoa( unescape( encodeURIComponent( input ) ) );
+    //return btoa( unescape( encodeURIComponent( input ) ) );
+    return Buffer.from(unescape( encodeURIComponent( input ) )).toString('base64');
 }
 
 function base64decode(input) {
     if (input===undefined||input === null ||input.trim() === "") return "";
-    return decodeURIComponent( escape( atob( input ) ) );
+    //return decodeURIComponent( escape( atob( input ) ) );
+    return decodeURIComponent( escape( atoBuffer.from(input, 'base64').toString()) );
 }
 
 export function encDat2(data,oddnumber){

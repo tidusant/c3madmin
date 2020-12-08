@@ -2,7 +2,15 @@ import '../styles/global.css'
 
 import '../styles/vendor.css'
 import '../styles/blurapp.css'
-export default function App({ Component, pageProps }) {
-    return <Component {...pageProps} />
-}
+import { Provider } from "../context";
   
+const App = ({ Component, pageProps }) => {
+    return <div>
+        <Provider>
+            <Component {...pageProps} />
+        </Provider>
+    </div>
+  };
+  
+  
+  export default App;

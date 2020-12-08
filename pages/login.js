@@ -1,12 +1,27 @@
 import Head from 'next/head'
 import styles from '../components/auth.module.css'
-import withoutAuth from '../hocs/withoutAuth';
-import { useAuth } from '../providers/Auth';
+import { Context } from "../context";
+import {GetData, Log} from "../components/data";
+import {encDat2} from "../components/crypto";   
 
-export default withoutAuth(function Login() {
+import Cookies from 'js-cookie'
+export default function Login() {
+    const { appstate, dispatch } = React.useContext(Context);
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const { setAuthenticated } = useAuth();
+  const [isLoading, setLoading] = React.useState(true);
+  
+    console.log(process.env.NEXT_PUBLIC_API_URL);
+  //create sex
+    GetData("CreateSex","",appstate,function(data){
+        if(data.status==="1"){
+            Cookies.set("sex",encDat2(data.data),{expires:1/(24*2)});
+            dispatch(defaultState)
+        }else{
+            dispatch({ error: data.error, loading:false, pending: false })
+        }
+    });
+  
   const submitHandler = async event => {
     event.preventDefault();
     const response = await fetch('/api/login', {
@@ -15,15 +30,23 @@ export default withoutAuth(function Login() {
       headers: {
         'Content-Type': 'application/json'
       },
-      
+
       body: JSON.stringify({ username, password })
     });
     if (response.status === 200) {
+        console.log(response);
       setAuthenticated(true);
     } else {
       console.error('Login error', response);
     }
   };
+  if(isLoading){
+      return (
+        <div id="preloader">
+            <div></div>
+        </div>
+      )
+  }
   return (
     <>
       <Head>
@@ -70,4 +93,19 @@ export default withoutAuth(function Login() {
         </div>
      </>
   )
-})
+}
+export async function getStaticProps(context) {
+    // const res = await fetch(`http://localhost:8081`)
+    // const data = await res.json()
+  
+    // if (!data) {
+    //   return {
+    //     notFound: true,
+    //   }
+    // }
+  
+    return {
+      props: {}, // will be passed to the page component as props
+    }
+  }
+  
