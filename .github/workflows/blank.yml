@@ -29,11 +29,11 @@ jobs:
         run: |
           npm install
           npm run build
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-artifact
-          path: out
+#       - name: 'Upload Artifact'
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: my-artifact
+#           path: out
 #       - name: 'Download Artifact on ec2-host'
 #         uses: actions/download-artifact@v2
 #         with:
@@ -44,13 +44,17 @@ jobs:
           docker build -t c3madmin_web .
           docker tag c3madmin_web tidusant/c3madmin_web
           docker push tidusant/c3madmin_web
-#   deploy:
-#     # The type of runner that the job will run on
-#     runs-on: self-hosted
-#     needs: [build]
-#     # Steps represent a sequence of tasks that will be executed as part of the job
-#     steps:      
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    needs: [build]
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:      
 #       - name: 'Download Artifact on ec2-host'
 #         uses: actions/download-artifact@v2
 #         with:
 #           name: my-artifact
+        - name: Kubernetes deploy
+          run: |
+            echo https://raw.githubusercontent.com/${{github.repository}}/${{github.base_ref}}/devdeploy.yml
+            kubectl apply -f https://raw.githubusercontent.com/${{github.repository}}/${{github.base_ref}}/devdeploy.yml
