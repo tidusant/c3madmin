@@ -34,3 +34,17 @@ jobs:
         with:
           name: my-artifact
           path: out
+      - name: 'Download Artifact on ec2-host'
+        uses: actions/download-artifact@v2
+        with:
+          name: my-artifact         
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:      
+      - name: 'Download Artifact on ec2-host'
+        uses: actions/download-artifact@v2
+        with:
+          name: my-artifact
