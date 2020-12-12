@@ -25,7 +25,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       # Runs a next build for project
-     
+    
       
       - name: Run nextjs build
         run: |
@@ -65,4 +65,4 @@ jobs:
         - name: Kubernetes deploy
           run: |
             echo https://raw.githubusercontent.com/${{github.repository}}/${{env.BRANCH_NAME}}/devdeploy.yml
-            kubectl apply -f https://raw.githubusercontent.com/${{github.repository}}/${{env.BRANCH_NAME}}/devdeploy.yml
+            sudo kubectl apply -f https://raw.githubusercontent.com/${{github.repository}}/${{env.BRANCH_NAME}}/devdeploy.yml
