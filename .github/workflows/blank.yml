@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Dev Deployment
 
 # Controls when the action will run. 
 on:
@@ -25,15 +25,17 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       # Runs a next build for project
+    
+      
       - name: Run nextjs build
         run: |
           npm install
           npm run build
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v2
-        with:
-          name: my-artifact
-          path: out
+#       - name: 'Upload Artifact'
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: my-artifact
+#           path: out
 #       - name: 'Download Artifact on ec2-host'
 #         uses: actions/download-artifact@v2
 #         with:
@@ -44,13 +46,23 @@ jobs:
           docker build -t c3madmin_web .
           docker tag c3madmin_web tidusant/c3madmin_web
           docker push tidusant/c3madmin_web
-#   deploy:
-#     # The type of runner that the job will run on
-#     runs-on: self-hosted
-#     needs: [build]
-#     # Steps represent a sequence of tasks that will be executed as part of the job
-#     steps:      
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    needs: [build]
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:      
 #       - name: 'Download Artifact on ec2-host'
 #         uses: actions/download-artifact@v2
 #         with:
 #           name: my-artifact
+        - name: Get branch name (push)
+          if: github.event_name == 'push'
+          shell: bash
+          run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        - name: Debug
+          run: echo ${{ env.BRANCH_NAME }}
+        - name: Kubernetes deploy
+          run: |
+            echo https://raw.githubusercontent.com/${{github.repository}}/${{env.BRANCH_NAME}}/devdeploy.yml
+            sudo kubectl apply -f https://raw.githubusercontent.com/${{github.repository}}/${{env.BRANCH_NAME}}/devdeploy.yml
