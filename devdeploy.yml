@@ -25,7 +25,16 @@ spec:
           image: tidusant/c3madmin-web:latest #Dockerhub image
           ports:
             - containerPort: 80 #Exposes the port 8080 of the container
-          
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              # httpHeaders:
+              # - name: Custom-Header
+              #   value: Awesome
+            initialDelaySeconds: 3
+            periodSeconds: 3
+
 
 ---
 kind: Service
