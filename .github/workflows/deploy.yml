@@ -2,7 +2,8 @@
 
 name: Dev Deployment
 env:
-  SERVER: dev
+  SERVER: colis-dev
+  DEPLOY_NAME: c3madmin-web
   COMMIT_FILTER: DEPLOY
 # Controls when the action will run. 
 on:
@@ -83,3 +84,5 @@ jobs:
     - name: Kubernetes deploy
       run: |
         sudo kubectl apply -f https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{needs.check.outputs.branch}}/devdeploy.yml
+        #force pull latest image
+        kubectl -n ${SERVER} rollout restart deploy ${DEPLOY_NAME}
