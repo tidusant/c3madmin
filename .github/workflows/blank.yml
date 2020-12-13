@@ -73,11 +73,12 @@ jobs:
 #         uses: actions/download-artifact@v2
 #         with:
 #           name: my-artifact
-        #check if message is DEPLOYdefaults:    
+        #check if message is DEPLOYdefaults:  
+        - name: Set branch name into GITHUB env
+          run:  echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
         - name: Kubernetes deploy
           run: |
             if [ "${{needs.check.outputs.isdeploy}}" == "true" ]; then
-              echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
               sudo kubectl apply -f https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{env.BRANCH_NAME}}/devdeploy.yml
             else
               echo "not a DEPLOY command, skip"
