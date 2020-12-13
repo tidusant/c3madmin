@@ -30,7 +30,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Set branch name into GITHUB env
-        run:  echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        run:  echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
       - id: check
         name: check is Deploy
         
