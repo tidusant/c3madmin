@@ -16,8 +16,12 @@ jobs:
   check:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      isdeploy: ${{ steps.check.outputs.isdeploy }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - id: check
       - name: check is Deploy
         env:
           COMMIT_FILTER: "DEPLOY"
@@ -30,10 +34,11 @@ jobs:
           echo "number of occurence of '$COMMIT_FILTER' in '$last_commit_log': $filter_count"
 
           if [[ "$filter_count" == "" ]]; then
-            echo "not a DEPLOY command, exit"
-            exit 78
+            echo "not a DEPLOY command"
+            echo "::set-output name=isdeploy::false"
           else
             echo "the last commit log \"$last_commit_log\" contains \"$COMMIT_FILTER\", start building"            
+            echo "::set-output name=isdeploy::true"
           fi
 
   build:
@@ -46,24 +51,19 @@ jobs:
       - uses: actions/checkout@v2
       # Runs a next build for project
       - name: Run nextjs build
+        #check if message is DEPLOY
         run: |
-          npm install
-          npm run build
-#       - name: 'Upload Artifact'
-#         uses: actions/upload-artifact@v2
-#         with:
-#           name: my-artifact
-#           path: out
-#       - name: 'Download Artifact on ec2-host'
-#         uses: actions/download-artifact@v2
-#         with:
-#           name: my-artifact        
-      - name: Docker build
-        run: |
-          echo ${{ secrets.DOCKER_TOKEN }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin 
-          docker build -t c3madmin_web .
-          docker tag c3madmin_web tidusant/c3madmin_web
-          docker push tidusant/c3madmin_web
+          if [["${{needs.check.outputs.isdeploy}}" == "true"]]; then
+            npm install
+            npm run build
+            echo "====== Docker build ========"
+            echo ${{ secrets.DOCKER_TOKEN }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin 
+            docker build -t c3madmin_web .
+            docker tag c3madmin_web tidusant/c3madmin_web
+            docker push tidusant/c3madmin_web
+          else
+            echo "not a DEPLOY command, skip"
+          fi
   deploy:
     # The type of runner that the job will run on
     runs-on: self-hosted
@@ -74,8 +74,12 @@ jobs:
 #         uses: actions/download-artifact@v2
 #         with:
 #           name: my-artifact
-        - name: Get branch name (push)
-          run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        #check if message is DEPLOYdefaults:    
         - name: Kubernetes deploy
           run: |
-            sudo kubectl apply -f https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{env.BRANCH_NAME}}/devdeploy.yml
+            if [["${{needs.check.outputs.isdeploy}}" == "true"]]; then
+              echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+              sudo kubectl apply -f https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{env.BRANCH_NAME}}/devdeploy.yml
+            else
+              echo "not a DEPLOY command, skip"
+            fi
