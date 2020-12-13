@@ -36,7 +36,7 @@ jobs:
         run: | 
           echo ${{env.COMMIT_FILTER}}
           echo ${COMMIT_FILTER}
-          #echo ${env.BRANCH_NAME}
+          echo ${{env.BRANCH_NAME}}
           echo ${BRANCH_NAME}
           # Get last commit message
           readonly local last_commit_log="${{github.event.head_commit.message}}"
