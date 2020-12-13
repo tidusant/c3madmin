@@ -30,10 +30,10 @@ jobs:
           readonly local last_commit_log="${{github.event.head_commit.message}}"
           echo "last commit log: $last_commit_log"
 
-          readonly local result=$(echo "$last_commit_log" | grep -c "$COMMIT_FILTER" )
-          echo "number of occurence of '$COMMIT_FILTER' in '$last_commit_log': $filter_count"
+          readonly local result=$(echo "$last_commit_log" | grep -E "^$COMMIT_FILTER" )
+          echo "search result: $result"
 
-          if [ "$filter_count" == "" ]; then
+          if [ "$result" == "" ]; then
             echo "not a DEPLOY command"
             echo "::set-output name=isdeploy::false"
           else
