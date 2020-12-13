@@ -38,7 +38,7 @@ spec:
               port: 80
               # httpHeaders:
               # - name: Custom-Header
-              #   value: Awesome
+              #   value: Awesome test
             initialDelaySeconds: 3
             periodSeconds: 3
 ---
