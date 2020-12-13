@@ -25,8 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
-      isdeploy: ""
-      branch: "" #${{ steps.check.outputs.branch }} 
+      isdeploy: ${{ steps.check.outputs.isdeploy }} 
+      branch: ${{ steps.check.outputs.branch }} 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Set branch name into GITHUB env
@@ -35,10 +35,6 @@ jobs:
         name: check is Deploy
         
         run: | 
-          echo ${{env.COMMIT_FILTER}}
-          echo ${COMMIT_FILTER}
-          echo ${{env.BRANCH_NAME}}
-          echo ${BRANCH_NAME}
           # Get last commit message
           readonly local last_commit_log="${{github.event.head_commit.message}}"
           echo "last commit log: $last_commit_log"
@@ -50,7 +46,7 @@ jobs:
             echo "not a DEPLOY command"
             echo "::set-output name=isdeploy::false"
           else
-            echo "the last commit log \"$last_commit_log\" contains \"$COMMIT_FILTER\", start building"            
+            echo "the last commit log contains \"$COMMIT_FILTER\", start building"            
             echo "::set-output name=isdeploy::true"
           fi
 
