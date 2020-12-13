@@ -82,7 +82,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: self-hosted
     needs: [check,build]
-    #if: "contains(${{github.event.commits[0].message}}, '${{jobs.check.env.COMMIT_FILTER}}')"
+    if: contains(${{github.event.commits[0].message}}, '${{env.COMMIT_FILTER}}')
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:      
 #       - name: 'Download Artifact on ec2-host'
@@ -93,6 +93,7 @@ jobs:
         
         - name: Kubernetes deploy
           run: |
+            echo ${{jobs.check.env.BRANCH_NAME}}
             if [ "${{needs.check.outputs.isdeploy}}" == "true" ]; then
               sudo kubectl apply -f https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{env.BRANCH_NAME}}/devdeploy.yml
             else
