@@ -4,7 +4,7 @@ name: Dev Deployment
 env:
   SERVER: dev
   COMMIT_FILTER: DEPLOY
-  BRANCH_NAME: ""
+  BRANCH_NAME: "test"
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch  
@@ -36,6 +36,8 @@ jobs:
         run: | 
           echo ${{env.COMMIT_FILTER}}
           echo ${COMMIT_FILTER}
+          echo ${env.BRANCH_NAME}
+          echo ${BRANCH_NAME}
           # Get last commit message
           readonly local last_commit_log="${{github.event.head_commit.message}}"
           echo "last commit log: $last_commit_log"
@@ -56,7 +58,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: check
-    if: "contains(${{needs.check.outputs.isdeploy}}, 'true')"
+    if: contains(${{needs.check.outputs.isdeploy}}, 'true')
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
