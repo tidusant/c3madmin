@@ -30,6 +30,7 @@ jobs:
           echo "number of occurence of '$COMMIT_FILTER' in '$last_commit_log': $filter_count"
 
           if [[ "$filter_count" == "" ]]; then
+            echo "not a DEPLOY command, exit"
             exit 78
           else
             echo "the last commit log \"$last_commit_log\" contains \"$COMMIT_FILTER\", start building"            
