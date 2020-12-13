@@ -25,7 +25,7 @@ spec:
           image: tidusant/c3madmin_web:latest #Dockerhub image
           ports:
             - containerPort: 80 #Exposes the port 8080 of the container
-          env
+          env:
             - name: PORT #Env variable key passed to container that is read by app
               value: "8081" # Value of the env port.
             - name: HOSTNAME
