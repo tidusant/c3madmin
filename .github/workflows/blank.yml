@@ -25,12 +25,12 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
-      isdeploy: ${{ steps.check.outputs.isdeploy }} 
-      branch: ${{ steps.check.outputs.branch }} 
+      isdeploy: "" 
+      branch: ""
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Set branch name into GITHUB env
-        run:  echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        run:  echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
       - id: check
         name: check is Deploy
         
@@ -80,7 +80,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: self-hosted
     needs: [check,build]
-    if: (contains(${{github.event.commits[0].message}}, "${COMMIT_FILTER}"))
+    if: "contains(${{needs.check.outputs.isdeploy}}, 'true')"
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:      
 #       - name: 'Download Artifact on ec2-host'
