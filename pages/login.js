@@ -55,7 +55,7 @@ export default function Login() {
       </Head>
       <div className={styles.auth_main}>
         <div className={styles.auth_block+" align-middle"}>
-            <h1>Colis Admin</h1>
+            <h1>Colis Admin 2</h1>
             
 
             <form className="form-horizontal" onSubmit={submitHandler}>
