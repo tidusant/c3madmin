@@ -87,4 +87,4 @@ jobs:
         echo "kubectl -n ${SERVER} rollout restart deploy ${DEPLOY_NAME}"
         sudo kubectl apply -f https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{needs.check.outputs.branch}}/devdeploy.yml
         #force pull latest image
-        #kubectl -n ${SERVER} rollout restart deploy ${DEPLOY_NAME}
+        sudo kubectl -n ${SERVER} rollout restart deploy ${DEPLOY_NAME}
