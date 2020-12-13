@@ -28,8 +28,8 @@ spec:
           env:
             - name: NEXT_PUBLIC_API_URL
               value: http://test.duyhf.com:8081/
-            - name: NEXT_PUBLIC_DEBUG #Env variable key passed to container that is read by app
-              value: false # Value of the env port.
+            - name: NEXT_PUBLIC_DEBUG 
+              value: "false"
             - name: HOSTNAME
               valueFrom:
                 fieldRef:
