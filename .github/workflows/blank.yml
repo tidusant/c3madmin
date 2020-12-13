@@ -25,8 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
-      isdeploy: "" 
-      branch: ""
+      isdeploy: ${{needs.check.outputs.isdeploy}}
+      branch: ${{needs.check.outputs.branch}}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Set branch name into GITHUB env
