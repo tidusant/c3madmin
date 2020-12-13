@@ -4,7 +4,6 @@ name: Dev Deployment
 env:
   SERVER: dev
   COMMIT_FILTER: DEPLOY
-  BRANCH_NAME: "test"
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch  
@@ -33,7 +32,6 @@ jobs:
         name: check is Deploy        
         run: | 
           #Set branch name
-          echo $(echo ${GITHUB_REF#refs/heads/})
           echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
           # Get last commit message
           readonly local last_commit_log="${{github.event.head_commit.message}}"
@@ -65,10 +63,7 @@ jobs:
       # Runs a next build for project
       - name: Run nextjs build
         run: |
-          echo ${BRANCH_NAME}
-          echo ${{needs.check.outputs.branch}}
-          echo ${{needs.check.outputs.isdeploy}}
-          if [ "${{needs.check.outputs.isdeploy}}" == "true" ]; then
+          #if [ "${{needs.check.outputs.isdeploy}}" == "true" ]; then
             npm install
             npm run build
             echo "====== Docker build ========"
@@ -76,16 +71,14 @@ jobs:
             docker build -t c3madmin_web .
             docker tag c3madmin_web tidusant/c3madmin_web
             docker push tidusant/c3madmin_web
-          else
-            echo "not a DEPLOY command, skip"
-          fi
+          #else
+          #  echo "not a DEPLOY command, skip"
+          #fi
   deploy:
+    if: ${{ contains('${{needs.check.outputs.isdeploy}}', 'true') }}
     # The type of runner that the job will run on
     runs-on: self-hosted
     needs: [check,build]
-    if: "false"
-    #if: contains(${{needs.check.outputs.isdeploy}}, 'true')
-    # contains(${{needs.check.outputs.isdeploy}}, 'true')
     steps:      
 #       - name: 'Download Artifact on ec2-host'
 #         uses: actions/download-artifact@v2
@@ -95,10 +88,4 @@ jobs:
         
         - name: Kubernetes deploy
           run: |
-            echo ${BRANCH_NAME}
-            echo ${{needs.check.outputs.branch}}
-            if [ "${{needs.check.outputs.isdeploy}}" == "true" ]; then
-              sudo kubectl apply -f https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{needs.check.outputs.branch}}/devdeploy.yml
-            else
-              echo "not a DEPLOY command, skip"
-            fi
+            sudo kubectl apply -f https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{needs.check.outputs.branch}}/devdeploy.yml
