@@ -6,7 +6,7 @@ metadata:
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: web
+  name: c3madmin-web
   namespace: colis-dev
   labels:
     app: c3madmin-web
