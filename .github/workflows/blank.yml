@@ -49,7 +49,7 @@ jobs:
           fi
 
   build:
-    if: "aaa" 
+    if: "true" 
     #if: ${{ contains('${{needs.check.outputs.isdeploy}}', 'true') }}
     #if: ${{needs.check.outputs.isdeploy}} == 'true'
     # The type of runner that the job will run on
