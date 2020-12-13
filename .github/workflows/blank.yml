@@ -51,7 +51,6 @@ jobs:
       - uses: actions/checkout@v2
       # Runs a next build for project
       - name: Run nextjs build
-        #check if message is DEPLOY
         run: |
           if [["${{needs.check.outputs.isdeploy}}" == "true"]]; then
             npm install
