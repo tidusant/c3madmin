@@ -51,8 +51,8 @@ jobs:
           fi
 
   build:
-    if: "false" 
-    #if: contains(${{needs.check.outputs.isdeploy}}, 'true')
+    #if: "false" 
+    if: "contains('${{needs.check.outputs.isdeploy}}', 'true')"
     #if: ${{needs.check.outputs.isdeploy}} == 'true'
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
