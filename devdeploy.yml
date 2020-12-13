@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: c3madmin-web #1st container
-          image: tidusant/c3madmin-web:latest #Dockerhub image
+          image: tidusant/c3madmin_web:latest #Dockerhub image
           ports:
             - containerPort: 80 #Exposes the port 8080 of the container
           livenessProbe:
