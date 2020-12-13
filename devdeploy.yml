@@ -45,9 +45,9 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: web
+    app: c3madmin-web
   ports:
-    - name: c3madmin-web
+    - name: c3madmin-web-port
       protocol: TCP
       port: 80
       nodePort: 30080 #must be between 30000 - 32767
