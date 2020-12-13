@@ -33,7 +33,7 @@ jobs:
           readonly local result=$(echo "$last_commit_log" | grep -c "$COMMIT_FILTER" )
           echo "number of occurence of '$COMMIT_FILTER' in '$last_commit_log': $filter_count"
 
-          if [[ "$filter_count" == "" ]]; then
+          if [ "$filter_count" == "" ]; then
             echo "not a DEPLOY command"
             echo "::set-output name=isdeploy::false"
           else
@@ -52,7 +52,7 @@ jobs:
       # Runs a next build for project
       - name: Run nextjs build
         run: |
-          if [["${{needs.check.outputs.isdeploy}}" == "true"]]; then
+          if [ "${{needs.check.outputs.isdeploy}}" == "true" ]; then
             npm install
             npm run build
             echo "====== Docker build ========"
@@ -76,7 +76,7 @@ jobs:
         #check if message is DEPLOYdefaults:    
         - name: Kubernetes deploy
           run: |
-            if [["${{needs.check.outputs.isdeploy}}" == "true"]]; then
+            if [ "${{needs.check.outputs.isdeploy}}" == "true" ]; then
               echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
               sudo kubectl apply -f https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{env.BRANCH_NAME}}/devdeploy.yml
             else
