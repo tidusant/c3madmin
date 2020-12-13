@@ -52,7 +52,7 @@ jobs:
 
   build:
     #if: "false" 
-    if: "contains('${{needs.check.outputs.isdeploy}}', 'true')"
+    if: ${{ contains('${{needs.check.outputs.isdeploy}}', 'true') }}
     #if: ${{needs.check.outputs.isdeploy}} == 'true'
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -83,7 +83,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: self-hosted
     needs: [check,build]
-    if: contains(${{needs.check.outputs.isdeploy}}, 'true')
+    if: "false"
+    #if: contains(${{needs.check.outputs.isdeploy}}, 'true')
     # contains(${{needs.check.outputs.isdeploy}}, 'true')
     steps:      
 #       - name: 'Download Artifact on ec2-host'
