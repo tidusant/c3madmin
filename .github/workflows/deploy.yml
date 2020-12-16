@@ -30,7 +30,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - id: check
-        name: check is Deploy        
+        name: check is Deploy    
+        env: # Or as an environment variable
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}    
         run: | 
           echo $NEXT_PUBLIC_API_URL
           #Set branch name
