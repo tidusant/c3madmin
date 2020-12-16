@@ -5,14 +5,7 @@ import {ToastContainer} from "react-toastify";
 import Cookies from 'js-cookie'
 import Router from 'next/router' 
 export default function Layout({ children }) {
-    const sex=Cookies.get('sex');
-    //check login
-    let isLogin=false;
-    if(sex){
-        //call api to check session is loggedin
-
-    }
-    if (!isLogin)typeof window !== 'undefined' && Router.push("/login");
+    
     return <>
         <main className="ng-scope">
         <ToastContainer
@@ -62,9 +55,3 @@ export default function Layout({ children }) {
         </>
   }
   
-  export async function getInitialProps(context) {
-    console.log(context);
-    return {
-      props: {}, // will be passed to the page component as props
-    }
-  }

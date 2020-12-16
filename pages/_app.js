@@ -2,11 +2,12 @@ import '../styles/global.css'
 
 import '../styles/vendor.css'
 import '../styles/blurapp.css'
-import { Provider } from "../context";
-  
+import { Provider } from 'react-redux'
+import { useStore } from '../store'
 const App = ({ Component, pageProps }) => {
+    const store = useStore(pageProps.initialReduxState)
     return <div>
-        <Provider>
+        <Provider store={store}>
             <Component {...pageProps} />
         </Provider>
     </div>

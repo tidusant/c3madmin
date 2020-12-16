@@ -25,11 +25,7 @@ spec:
           image: tidusant/c3madmin_web:latest #Dockerhub image
           ports:
             - containerPort: 80 #Exposes the port 8080 of the container test
-          env:
-            - name: NEXT_PUBLIC_API_URL
-              value: http://test.duyhf.com:8081/
-            - name: NEXT_PUBLIC_DEBUG 
-              value: "false"
+          env:            
             - name: HOSTNAME
               valueFrom:
                 fieldRef:
