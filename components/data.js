@@ -13,48 +13,51 @@ export async function GetData(requestUrl, params, userstate, fn) {
 
     } else {
         Log("call: " + requestUrl + " data:" + params + " - " + sex)
-        
 
-        const res = await fetch(process.env.NEXT_PUBLIC_API_URL + encDat2(requestUrl, 7), {
-            method: 'POST',
-            body: "data=" + encDat2(sex + "|" + params, 9),
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        })
-        const datatext = await res.text();
-        //get data and decode
-        let data = ""
         try {
-            data = decDat(datatext);
-        }
-        catch (ex) {
+            const res = await fetch(process.env.NEXT_PUBLIC_API_URL + encDat2(requestUrl, 7), {
+                method: 'POST',
+                body: "data=" + encDat2(sex + "|" + params, 9),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            const datatext = await res.text();
+            //get data and decode
+            let data = ""
             try {
-                data = decDat(datatext, true);
+                data = decDat(datatext);
             }
             catch (ex) {
-                rs.error = ex.message;
-                fn(rs)
+                try {
+                    data = decDat(datatext, true);
+                }
+                catch (ex) {
+                    rs.error = ex.message;
+                    fn(rs)
+                }
             }
-        }
-        //parse to json object
-        Log("data return:" + data);
-        let rtdata = {};
-        try {
-            rtdata = JSON.parse(data)
-            if (rtdata.status !== undefined) rs.status = rtdata.status;
-            if (rtdata.error !== undefined) rs.error = rtdata.error;
-            if (rtdata.message !== undefined) rs.message = rtdata.message;
-            if (rtdata.data !== undefined) rs.data = rtdata.data;
-        } catch (ex) {
-            rs.error = ex.message;
+            //parse to json object
+            Log("data return:" + data);
+            let rtdata = {};
+            try {
+                rtdata = JSON.parse(data)
+                if (rtdata.status !== undefined) rs.status = rtdata.status;
+                if (rtdata.error !== undefined) rs.error = rtdata.error;
+                if (rtdata.message !== undefined) rs.message = rtdata.message;
+                if (rtdata.data !== undefined) rs.data = rtdata.data;
+            } catch (ex) {
+                rs.error = ex.message;
 
-        }
+            }
 
-        //update session if request success
-        if (rtdata.status === 1) {
-            const statesex=useSelector((state) => state.token)
-            if (statesex) Cookies.set("sex", encDat2(statesex), { expires: 1 / (24 * 2) });
+            //update session if request success
+            if (rtdata.status === 1) {
+                const statesex = useSelector((state) => state.token)
+                if (statesex) Cookies.set("sex", encDat2(statesex), { expires: 1 / (24 * 2) });
+            }
+        } catch (error) {
+            rs.error = "Can not call to service.";
         }
     }
     return Promise.resolve(rs);
