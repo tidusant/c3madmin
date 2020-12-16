@@ -3,7 +3,7 @@
 name: Dev Deployment
 env:
   SERVER: colis-dev
-  DEPLOY_NAME: c3madmin-web
+  DEPLOY_NAME: c3madmin-web-dev
   COMMIT_FILTER: DEPLOY
   NEXT_PUBLIC_API_URL: http://c3md-api.duyhf.com/
   NEXT_PUBLIC_DEBUG: true
@@ -72,9 +72,9 @@ jobs:
             npm run build
             echo "====== Docker build ========"
             echo ${{ secrets.DOCKER_TOKEN }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin 
-            docker build -t c3madmin_web .
-            docker tag c3madmin_web tidusant/c3madmin_web
-            docker push tidusant/c3madmin_web
+            docker build -t ${DEPLOY_NAME} .
+            docker tag ${DEPLOY_NAME} ${{ secrets.DOCKER_USERNAME }}/${DEPLOY_NAME}
+            docker push ${{ secrets.DOCKER_USERNAME }}/${DEPLOY_NAME}
           #else
           #  echo "not a DEPLOY command, skip"
           #fi
