@@ -1,37 +1,39 @@
 import Sidebar from './sidebar'
 import PageTop from './pagetop'
 import ScrollToTop from "react-scroll-up";
-import {ToastContainer} from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import Cookies from 'js-cookie'
-import Router from 'next/router' 
+import Router from 'next/router'
 export default function Layout({ children }) {
-    
+
     return <>
         <main className="ng-scope">
-        <ToastContainer
-                    position="top-center"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                />
-            
-                <ba-sidebar>
-                    <Sidebar />
-                </ba-sidebar>
-                <page-top>
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
 
-                    <PageTop />
-                </page-top>
+            <ba-sidebar>
+                <Sidebar />
+            </ba-sidebar>
+            <page-top>
 
+                <PageTop />
+            </page-top>
 
-            {children}
+            <div className="al-main">
+                <div className="al-content">
+                    {children}
 
-            
+                </div>
+            </div>
             <footer className="al-footer clearfix">
                 <div className="al-footer-right">Created with <i className="ion-heart"></i></div>
                 <div className="al-footer-main clearfix">
@@ -51,7 +53,6 @@ export default function Layout({ children }) {
             </back-top>
 
         </main>
-        
-        </>
-  }
-  
+
+    </>
+}

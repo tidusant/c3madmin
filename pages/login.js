@@ -3,7 +3,7 @@ import styles from '../components/auth.module.css'
 
 import { GetData, Log } from "../components/data";
 import { encDat2, decDat } from "../components/crypto";
-
+import Router from 'next/router'
 import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from 'react-redux'
 export default function Login() {
@@ -13,42 +13,60 @@ export default function Login() {
   const [isLoading, setLoading] = React.useState(true);
   const [errorMessage, setErrorMessage] = React.useState("");
   const [isRender, setRender] = React.useState(false);//flag to check page is already rendered
-
+  const userstate = useSelector((state) => state)
   //check render to make sure this code run only one
-  if (!isRender) {
-    setRender(true);
-    
-    //create sex
-    GetData("CreateSex", "")
-    .then(data=>{
-      if (data.status === "1") {
-        Cookies.set("sex", encDat2(data.data), { expires: 1 / (24 * 2) }); 
-        dispatch({
-          type: 'SEX',
-          data: data.data
-        })
-        //dispatch(...appstate,{})    
-      } else {        
-        setErrorMessage(data.error);        
-        //dispatch({ error: data.error, loading: false, pending: false })
-      }
-      setLoading(false);
-    });
-  }
+ 
+    if (!isRender) {
+      setRender(true);
 
+      //create sex
+      GetData("CreateSex", "", userstate)
+        .then(data => {
+          console.log('will', data)
+          if (data.status === 1) {
+            console.log("store cookie");
+            Cookies.set("sex", encDat2(data.data), { expires: 1 / (24 * 2) });
+            dispatch({
+              type: 'SEX',
+              data: data.data
+            })
+            //dispatch(...appstate,{})    
+          } else {
+            setErrorMessage(data.error);
+            //dispatch({ error: data.error, loading: false, pending: false })
+          }
+          setLoading(false);
+        });
+    }
+  
   const submitHandler = async event => {
     event.preventDefault();
     setLoading(true);
-    GetData("aut", "")
-    .then(data=>{
-      if (data.status === "1") {
-        Cookies.set("sex", encDat2(data.data), { expires: 1 / (24 * 2) });        
-      } else {        
-        setErrorMessage(data.error);        
-        //dispatch({ error: data.error, loading: false, pending: false })
-      }
-      setLoading(false);
-    });
+    GetData("aut", "l|" + username + "," + password, userstate)
+      .then(data => {
+        if (data.status === 1) {
+
+          try {
+            const userinfo = JSON.parse(data.data)
+            console.log(userinfo);
+            dispatch({
+              type: 'USER',
+              data: userinfo
+            })
+            const redirect = Cookies.get("redirect_login")
+            Router.push(redirect || "/")
+          }
+          catch (e) {
+            setErrorMessage(e.message);
+          }
+
+
+        } else {
+          setErrorMessage(data.error);
+          //dispatch({ error: data.error, loading: false, pending: false })
+        }
+        setLoading(false);
+      });
   };
   if (isLoading) {
     return (

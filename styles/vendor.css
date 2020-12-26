@@ -20,7 +20,7 @@ sup {
     -moz-osx-font-smoothing: grayscale
 }
 
-.toast-message,
+.Toastify__message,
 pre {
     word-wrap: break-word
 }
@@ -811,7 +811,7 @@ html {
     -moz-osx-font-smoothing: grayscale
 }
 
-.toast-title,
+.Toastify__title,
 b,
 optgroup,
 strong {
@@ -3750,17 +3750,19 @@ strong {
     content: "\f30c"
 }
 
-.toast-message a,
-.toast-message label {
+
+
+.Toastify__message a,
+.Toastify__message label {
     color: #fff
 }
 
-.toast-message a:hover {
+.Toastify__message a:hover {
     color: #ccc;
     text-decoration: none
 }
 
-.toast-close-button {
+.Toastify__close-button {
     position: relative;
     right: -.3em;
     top: -.3em;
@@ -3773,22 +3775,22 @@ strong {
     opacity: .8
 }
 
-.toast-top-center,
-.toast-top-full-width {
+.Toastify__top-center,
+.Toastify__top-full-width {
     top: 0;
     right: 0;
     width: 100%
 }
 
-.toast-close-button:focus,
-.toast-close-button:hover {
+.Toastify__close-button:focus,
+.Toastify__close-button:hover {
     color: #000;
     text-decoration: none;
     cursor: pointer;
     opacity: .4
 }
 
-button.toast-close-button {
+button.Toastify__close-button {
     padding: 0;
     cursor: pointer;
     background: 0 0;
@@ -3796,34 +3798,34 @@ button.toast-close-button {
     -webkit-appearance: none
 }
 
-.toast-bottom-center {
+.Toastify__bottom-center {
     bottom: 0;
     right: 0;
     width: 100%
 }
 
-.toast-bottom-full-width {
+.Toastify__bottom-full-width {
     bottom: 0;
     right: 0;
     width: 100%
 }
 
-.toast-top-left {
+.Toastify__top-left {
     top: 12px;
     left: 12px
 }
 
-.toast-top-right {
+.Toastify__top-right {
     top: 12px;
     right: 12px
 }
 
-.toast-bottom-right {
+.Toastify__bottom-right {
     right: 12px;
     bottom: 12px
 }
 
-.toast-bottom-left {
+.Toastify__bottom-left {
     bottom: 12px;
     left: 12px
 }
@@ -3886,15 +3888,15 @@ img {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=)!important
 }
 
-.Toastify.toast-bottom-center .Toastify__toast,
-.Toastify.toast-top-center .Toastify__toast {
+.Toastify.Toastify__bottom-center .Toastify__toast,
+.Toastify.Toastify__top-center .Toastify__toast {
     width: 300px;
     margin-left: auto;
     margin-right: auto
 }
 
-.Toastify.toast-bottom-full-width .Toastify__toast,
-.Toastify.toast-top-full-width .Toastify__toast {
+.Toastify.Toastify__bottom-full-width .Toastify__toast,
+.Toastify.Toastify__top-full-width .Toastify__toast {
     width: 96%;
     margin-left: auto;
     margin-right: auto
@@ -3909,7 +3911,7 @@ figure {
     background-color: #030303
 }
 
-.toast-success {
+.Toastify__success {
     background-color: #51a351
 }
 
@@ -3961,7 +3963,7 @@ div[toast].ng-leave.ng-leave-active {
         padding: 8px 8px 8px 50px;
         width: 11em
     }
-    .Toastify .toast-close-button {
+    .Toastify .Toastify__close-button {
         right: -.2em;
         top: -.2em
     }
@@ -3972,7 +3974,7 @@ div[toast].ng-leave.ng-leave-active {
         padding: 8px 8px 8px 50px;
         width: 18em
     }
-    .Toastify .toast-close-button {
+    .Toastify .Toastify__close-button {
         right: -.2em;
         top: -.2em
     }

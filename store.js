@@ -6,18 +6,34 @@ let store
 
 const initialState = {
   token: "",
+  name:"",
   username: "",
-  
+  login_redirect:"/",
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'LOGOUT':
+      return {
+        ...state,
+        initialState,
+      }
     case 'SEX':
       return {
         ...state,
         token: action.data,
       }
-    
+      case 'LOGIN_REDIRECT':
+        return {
+          ...state,
+          login_redirect: action.data,
+        }
+        case 'USER':
+          return {
+            ...state,
+            name: action.data.name,
+            token: action.data.sex
+          }
     default:
       return state
   }

@@ -2,15 +2,19 @@ import { encDat2, decDat } from "./crypto";
 import Cookies from 'js-cookie'
 import Router from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
-export async function GetData(requestUrl, params, userstate, fn) {
-    console.log('getdata');
-    let rs = { status: 0, error: "error in request", message: "", data: {} }
+
+export async function GetData(requestUrl, params, userstate) {
+    //cannot use dispatch in this function
+    let rs = { status: 0, error: "", message: "", data: {} }
     let sex = Cookies.get("sex")
 
     if ((sex === undefined || sex === "") && requestUrl !== "CreateSex") {
-        rs.status = "-2";
-        rs.error = "No session, please login again"
-
+        rs.status = -1;
+        rs.error = "No session, please reload page."
+        if (Router.pathname != "/login") {
+            Cookies.set("redirect_login", Router.pathname)
+            Router.push("/login")
+        }
     } else {
         Log("call: " + requestUrl + " data:" + params + " - " + sex)
 
@@ -23,41 +27,46 @@ export async function GetData(requestUrl, params, userstate, fn) {
                 }
             })
             const datatext = await res.text();
+            
             //get data and decode
             let data = ""
             try {
                 data = decDat(datatext);
             }
             catch (ex) {
-                try {
+                console.log("error in first dec:",ex.message)
                     data = decDat(datatext, true);
-                }
-                catch (ex) {
-                    rs.error = ex.message;
-                    fn(rs)
-                }
+                
             }
             //parse to json object
-            Log("data return:" + data);
+            
             let rtdata = {};
             try {
                 rtdata = JSON.parse(data)
-                if (rtdata.status !== undefined) rs.status = rtdata.status;
-                if (rtdata.error !== undefined) rs.error = rtdata.error;
-                if (rtdata.message !== undefined) rs.message = rtdata.message;
-                if (rtdata.data !== undefined) rs.data = rtdata.data;
+                if (rtdata.Status !== undefined) rs.status = rtdata.Status;
+                if (rtdata.Error !== undefined) rs.error = rtdata.Error;
+                if (rtdata.Message !== undefined) rs.message = rtdata.Message;
+                if (rtdata.Data !== undefined) rs.data = rtdata.Data;
             } catch (ex) {
                 rs.error = ex.message;
-
             }
+        
 
             //update session if request success
-            if (rtdata.status === 1) {
-                const statesex = useSelector((state) => state.token)
-                if (statesex) Cookies.set("sex", encDat2(statesex), { expires: 1 / (24 * 2) });
+
+            if (rtdata.Status === 1) {
+                if (userstate.token) Cookies.set("sex", encDat2(userstate.token), { expires: 1 / (24 * 2) });
+            } else if (rtdata.Status === -1) {
+
+                if (Router.pathname != "/login") {
+                    Cookies.set("redirect_login", Router.pathname)
+                    Router.push("/login")
+                }
+
             }
+        
         } catch (error) {
-            rs.error = "Can not call to service.";
+            rs.error = "Error:" + error.message;
         }
     }
     return Promise.resolve(rs);
@@ -69,18 +78,55 @@ export function Log(message) {
         console.log(message)
     }
 }
-export function isAuth() {
+export async function checkAuth(login_redirect, userstate) {
+    //becarefull to use dispatch here, it's maybe become an fewer hook error
+    const dispatch = useDispatch()
+    let rs = { status: 0, error: "not auth", message: "", data: {} }
     const sex = Cookies.get('sex');
-    //check login
-    let isLogin = false;
-    if (sex) {
-        //call api to check session is loggedin
+    var isLogin = false
+    
+    if (!userstate.name) {
+        
+        if (sex) {            
+            //call request to check auth for this session
+            const res = await GetData("aut", "t", userstate)
+
+            //const datatext = await res.();
+            console.log("data", res)
+
+            // .then(data=>{                
+            if (res.status === 1) {
+                isLogin = true;
+                rs = res
+                try {
+                    rs.data = JSON.parse(rs.data)
+                    dispatch({
+                        type: 'USER',
+                        data: rs.data
+                    })
+                } catch (e) {
+                    rs.status = 0;
+                    rs.data = {};
+                    rs.error = e.message
+                }
+            }
+        }
+        //     });
+        //}
+    }else{
+        rs.status=1
+        isLogin=true
+    }
+    if (!isLogin) {
+        // dispatch({
+        //     type: 'LOGIN_REDIRECT',
+        //     data: login_redirect
+        //   })
+        
+        Cookies.set("redirect_login",login_redirect)
+        typeof window !== 'undefined' && Router.push("/login");
 
     }
-    if ((!isLogin)) {
-        typeof window !== 'undefined' && Router.push("/login");
-        return false;
-    }
-    return true;
+    return Promise.resolve(rs);
 
 }
