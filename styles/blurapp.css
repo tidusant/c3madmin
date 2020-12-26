@@ -4196,7 +4196,9 @@ button.progress-button.btn.btn-danger.progress-button-perspective .content {
     width: .5em;
     height: .5em
 }
-
+body.blur-theme{
+    margin: 0;
+}
 body.blur-theme::before,
 body.mobile.blur-theme .body-bg::before {
     content: '';

@@ -1,2 +1,5 @@
-### run docker
-test
+### get dependency and build
+```
+npm install
+npm run build
+```
