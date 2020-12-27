@@ -31,7 +31,7 @@ const reducer = (state = initialState, action) => {
         case 'USER':
           return {
             ...state,
-            name: action.data.name,
+            name: action.data.username,
             token: action.data.sex
           }
     default:

@@ -28,7 +28,7 @@ export default function Sidebar() {
 
         </li>
         <li className="al-sidebar-list-item">
-            <Link href="/orders" >
+            <Link href="/pages" >
                 <a className="al-sidebar-list-link">
                     
                 <i>

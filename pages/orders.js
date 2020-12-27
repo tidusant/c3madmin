@@ -8,7 +8,7 @@ import Layout from '../components/layout'
 import Loading from '../components/loading'
 import { toast } from "react-toastify";
 import NumberFormat from 'react-number-format';
-import next from 'next'
+
 export default function Orders() {
   const userstate = useSelector((state) => state)
 
@@ -25,26 +25,7 @@ export default function Orders() {
   checkAuth("/orders", JSON.parse(JSON.stringify(userstate)))
 
   //=========== event handler:
-  const changeShop = async shopid => {
-
-    setLoading(true);
-    GetData("shop", "cs|" + shopid, userstate)
-      .then(rs => {
-        if (rs.status === 1) {
-          try {
-            const rsdata = JSON.parse(rs.data)
-            setData(rsdata)
-          } catch (e) {
-            toast.error(e.message)
-          }
-        } else {
-          toast.error(rs.error)
-        }
-        setLoading(false);
-      });
-  };
-
-
+  
   //=========================
 
 
@@ -65,7 +46,7 @@ export default function Orders() {
     if (state.isLoading) {
       switch (state.nextAction) {
         case "get":
-          GetData("ord", `all|${state.selectedStatus},${state.currentPage},100`, userstate).then(rs => {
+          GetData("ord", `all|${state.selectedStatus},${state.currentPage},50`, userstate).then(rs => {
             if (rs.status === 1) {
               try {
                 const data = JSON.parse(rs.data)
