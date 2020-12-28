@@ -63,7 +63,7 @@ export default function Orders() {
         case "change":
           const page = state.page || 1
           const selectedStatus = state.selectedStatus || "all"
-          GetData("ord", "lao|" + selectedStatus + "," + page, userstate).then(rs => {
+          GetData("ord", `lao|${state.selectedStatus},${state.currentPage},50`, userstate).then(rs => {
             if (rs.status === 1) {
               try {
                 const data = JSON.parse(rs.data)
@@ -124,7 +124,7 @@ export default function Orders() {
                       <li key={k} title={status.Name}>
 
                         <button type="button"
-                          onClick={() => setState({ ...state, isLoading: true, nextAction: "get", selectedStatus: status.ID, currentPage: 1 })}
+                          onClick={() => setState({ ...state, isLoading: true, nextAction: "change", selectedStatus: status.ID, currentPage: 1 })}
                           style={status.Id !== state.selectedStatus ? {
                             backgroundColor: `#${status.Color}`,
                             borderColor: `#${status.Color}`
@@ -288,7 +288,7 @@ export default function Orders() {
 
                 <ul className="pagination">
                   {Array(state.PageCount).fill(1).map((el, i) =>
-                    <li className={`${state.currentPage == i + 1 ? "active" : ""}`} key={i} onClick={() => state.currentPage != (i + 1) && setState({ ...state, isLoading: true, nextAction: "get", currentPage: (i + 1) })} >
+                    <li className={`${state.currentPage == i + 1 ? "active" : ""}`} key={i} onClick={() => state.currentPage != (i + 1) && setState({ ...state, isLoading: true, nextAction: "change", currentPage: (i + 1) })} >
                       <a className="ng-binding">{i + 1}</a>
                     </li>
                   )}

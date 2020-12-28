@@ -7,15 +7,15 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useState } from 'react'
 import { GetData, Log } from "../components/data";
 import { toast } from "react-toastify";
+import titleize from "titleize"
+import humanizeString from "humanize-string"
 export default function Pages() {
   const userstate = useSelector((state) => state)
   const [state, setState] = useState({
     isRender: false,
     isLoading: false,
-    nextAction: "get",
-    currentPage: 1,
-    allTotal: 0,
-    selectedStatus: "all",
+    nextAction: "get", 
+    
     payload: {}
   })
   //alway check auth before render
@@ -45,16 +45,17 @@ export default function Pages() {
     if (state.isLoading) {
       switch (state.nextAction) {
         case "get":
-          GetData("shop", `lsi`, userstate).then(rs => {
+          GetData("page", `la`, userstate).then(rs => {
             if (rs.status === 1) {
               try {
                 const data = JSON.parse(rs.data)
-                setState({ ...state, isLoading: false, nextAction: "", ...data })
+                setState({ ...state, isLoading: false, nextAction: "", Pages:data })
               } catch (e) {
                 toast.error(e.message)
               }
             } else {
               toast.error(rs.error)
+              setState({ ...state, isLoading: false, nextAction: "" })
             }
           })
           break;
@@ -89,33 +90,27 @@ export default function Pages() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {state.isLoading && <Loading />}
-      {state.Shop &&
+      {state.Pages &&
         <div className="row">
+          
           <div className="col-md-12 col-sm-12">
             <div className="panel with-scroll animated zoomIn">
               <div className="panel-heading clearfix">
-                <h3 className="panel-title ">Current Site</h3>
-              </div>
-              <div className="panel-body text-center">
-
-                <button type="button" className="btn btn-info btn-lg disabled">{state.Shop.Name}</button>
-
-
-              </div>
-            </div>
-          </div>
-
-          <div className="col-md-12 col-sm-12">
-            <div className="panel with-scroll animated zoomIn">
-              <div className="panel-heading clearfix">
-                <h3 className="panel-title">Select Site</h3>
+                <h3 className="panel-title">Select Page</h3>
               </div>
               <div className="panel-body text-center">
                 <div className="ng-scope">
-                  {state.Others.length > 0 && state.Others.map((shop) =>
-                    <button key={shop.ID} type="button" onClick={() => setState({ ...state, nextAction: "change", isLoading: true, payload: { shopid: shop.ID } })} className="btn btn-default btn-lg margin-left margin-right">
-                      {shop.Name}
+                  {state.Pages.length > 0 && state.Pages.map((item) =>
+                  <span key={item.ID}>
+                  {item.ID==state.selectedPageId&&
+                    <button  type="button" className="btn btn-info btn-lg disabled">{titleize(humanizeString(item.Code))}</button>
+                  }
+                  {item.ID!=state.selectedPageId&&
+                    <button  type="button" onClick={() => setState({ ...state, nextAction: "change", isLoading: true, payload: { shopid: item.ID } })} className="btn btn-default btn-lg margin-left margin-right">
+                      {titleize(humanizeString(item.Code))}
                     </button>
+                  }
+                  </span>
                   )}
 
 
