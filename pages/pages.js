@@ -71,6 +71,7 @@ export default function Pages() {
                 }
               } else {
                 toast.error(rs.error)
+                setState({ ...state, isLoading: false, nextAction: "" })
               }
 
             });
