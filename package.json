@@ -6,9 +6,7 @@
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build && next export",
     "start": "next build && next start",
-    "debug": "node --inspect-brk ./node_modules/next/dist/bin/next",
-    "heroku-postbuild": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "debug": "node --inspect-brk ./node_modules/next/dist/bin/next"
   },
   "dependencies": {
     "autoprefixer": "^10.0.4",
