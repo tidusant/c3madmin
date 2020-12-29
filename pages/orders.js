@@ -21,15 +21,15 @@ export default function Orders() {
     allTotal: 0,
     selectedStatus: "all"
   })
-  //alway check auth before render
-  checkAuth("/orders", JSON.parse(JSON.stringify(userstate)))
+  
 
   //=========== event handler:
   
   //=========================
 
-
-  if (userstate.name) {
+  //alway check auth before render
+  checkAuth("/orders", JSON.parse(JSON.stringify(userstate)))
+  if (userstate.username) {
 
     //====== all the run once logic code should go here
     if (!state.isRender) {
@@ -47,16 +47,16 @@ export default function Orders() {
       switch (state.nextAction) {
         case "get":
           GetData("ord", `all|${state.selectedStatus},${state.currentPage},50`, userstate).then(rs => {
-            if (rs.status === 1) {
+            if (rs.Status === 1) {
               try {
-                const data = JSON.parse(rs.data)
+                const data = JSON.parse(rs.Data)
                 state.selectedStatus == "all" && (data["allTotal"] = data["Total"])
                 setState({ ...state, isLoading: false, nextAction: "", ...data })
               } catch (e) {
                 toast.error(e.message)
               }
             } else {
-              toast.error(rs.error)
+              toast.error(rs.Error)
             }
           })
           break;
@@ -64,15 +64,15 @@ export default function Orders() {
           const page = state.page || 1
           const selectedStatus = state.selectedStatus || "all"
           GetData("ord", `lao|${state.selectedStatus},${state.currentPage},50`, userstate).then(rs => {
-            if (rs.status === 1) {
+            if (rs.Status === 1) {
               try {
-                const data = JSON.parse(rs.data)
+                const data = JSON.parse(rs.Data)
                 setState({ ...state, isLoading: false, nextAction: "", orders: data })
               } catch (e) {
                 toast.error(e.message)
               }
             } else {
-              toast.error(rs.error)
+              toast.error(rs.Error)
             }
 
           })
@@ -113,9 +113,9 @@ export default function Orders() {
                     </li>
                     <li>
                       <button type="button" className={`btn btn-default btn-with-icon ${state.selectedStatus == "all" ? "disabled" : ""}`}
-              onClick={() => setState({ ...state, isLoading: true, nextAction: "get", selectedStatus: "all", currentPage: 1 })}
+              onClick={() => state.selectedStatus != "all"&&setState({ ...state, isLoading: true, nextAction: "get", selectedStatus: "all", currentPage: 1 })}
                       >
-                        {!state.selectedStatus && state.selectedStatus == "all" &&
+                        {!state.selectedStatus || state.selectedStatus == "all" &&
                           <i className="ion-android-checkmark-circle"></i>}
                                   All{" "}<b>({state.allTotal})</b>
                       </button>
@@ -124,8 +124,8 @@ export default function Orders() {
                       <li key={k} title={status.Name}>
 
                         <button type="button"
-                          onClick={() => setState({ ...state, isLoading: true, nextAction: "change", selectedStatus: status.ID, currentPage: 1 })}
-                          style={status.Id !== state.selectedStatus ? {
+                          onClick={() => state.selectedStatus !== status.ID&&setState({ ...state, isLoading: true, nextAction: "change", selectedStatus: status.ID, currentPage: 1 })}
+                          style={status.ID !== state.selectedStatus ? {
                             backgroundColor: `#${status.Color}`,
                             borderColor: `#${status.Color}`
                           }

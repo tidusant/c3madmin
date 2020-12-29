@@ -28,7 +28,7 @@ export default function Pages() {
   //=========================
 
 
-  if (userstate.name) {
+  if (userstate.username) {
 
     //====== all the run once logic code should go here
     if (!state.isRender) {
@@ -46,15 +46,15 @@ export default function Pages() {
       switch (state.nextAction) {
         case "get":
           GetData("page", `la`, userstate).then(rs => {
-            if (rs.status === 1) {
+            if (rs.Status === 1) {
               try {
-                const data = JSON.parse(rs.data)
+                const data = JSON.parse(rs.Data)
                 setState({ ...state, isLoading: false, nextAction: "", Pages:data })
               } catch (e) {
                 toast.error(e.message)
               }
             } else {
-              toast.error(rs.error)
+              toast.error(rs.Error)
               setState({ ...state, isLoading: false, nextAction: "" })
             }
           })
@@ -62,15 +62,15 @@ export default function Pages() {
         case "change":
           GetData("shop", `cs|${state.payload.shopid}`, userstate)
             .then(rs => {
-              if (rs.status === 1) {
+              if (rs.Status === 1) {
                 try {
-                  const rsdata = JSON.parse(rs.data)
+                  const rsdata = JSON.parse(rs.Data)
                   setState({ ...state, isLoading: false, nextAction: "", ...rsdata })
                 } catch (e) {
                   toast.error(e.message)
                 }
               } else {
-                toast.error(rs.error)
+                toast.error(rs.Error)
                 setState({ ...state, isLoading: false, nextAction: "" })
               }
 

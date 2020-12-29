@@ -8,6 +8,7 @@ const initialState = {
   token: "",
   name:"",
   username: "",
+  shop:"",
   login_redirect:"/",
 }
 
@@ -31,7 +32,7 @@ const reducer = (state = initialState, action) => {
         case 'USER':
           return {
             ...state,
-            name: action.data.username,
+            username: action.data.username,
             token: action.data.sex
           }
     default:

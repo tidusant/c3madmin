@@ -28,7 +28,7 @@ export default function Home() {
   //=========================
 
 
-  if (userstate.name) {
+  if (userstate.username) {
 
     //====== all the run once logic code should go here
     if (!state.isRender) {
@@ -46,25 +46,26 @@ export default function Home() {
       switch (state.nextAction) {
         case "get":
           GetData("shop", `lsi`, userstate).then(rs => {
-            if (rs.status === 1) {
+            console.log("data return",rs)
+            if (rs.Status === 1) {
               try {
-                const data = JSON.parse(rs.data)
+                const data = JSON.parse(rs.Data)
                 setState({ ...state, isLoading: false, nextAction: "", Shops:data.Shops,selectedShopId:data.DefaultShopId })
               } catch (e) {
                 toast.error(e.message)
               }
             } else {
-              toast.error(rs.error)
+              toast.error(rs.Error)
             }
           })
           break;
         case "change":
           GetData("shop", `cs|${state.payload.shopid}`, userstate)
             .then(rs => {
-              if (rs.status === 1) {
+              if (rs.Status === 1) {
                 setState({ ...state, isLoading: false, nextAction: "", selectedShopId:state.payload.shopid })
               } else {
-                toast.error(rs.error)
+                toast.error(rs.Error)
               }
 
             });

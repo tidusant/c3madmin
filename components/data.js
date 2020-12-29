@@ -5,15 +5,15 @@ import { useSelector, useDispatch } from 'react-redux'
 
 export async function GetData(requestUrl, params, userstate) {
     //cannot use dispatch in this function
-    let rs = { status: 0, error: "", message: "", data: {} }
+    let rs = { Status: 0, Error: "", Message: "", Data: {} }
     let sex = Cookies.get("sex")
 
     if ((sex === undefined || sex === "") && requestUrl !== "CreateSex") {
-        rs.status = -1;
-        rs.error = "No session, please reload page."
+        rs.Status = 0;
+        //rs.Error = "No session, please reload page."
         if (Router.pathname != "/login") {
             Cookies.set("redirect_login", Router.pathname)
-            Router.push("/login")
+            SafeRedirect("/login")
         }
     } else {
         Log("call: " + requestUrl + " data:" + params + " - " + sex)
@@ -43,12 +43,12 @@ export async function GetData(requestUrl, params, userstate) {
             let rtdata = {};
             try {
                 rtdata = JSON.parse(data)
-                if (rtdata.Status !== undefined) rs.status = rtdata.Status;
-                if (rtdata.Error !== undefined) rs.error = rtdata.Error;
-                if (rtdata.Message !== undefined) rs.message = rtdata.Message;
-                if (rtdata.Data !== undefined) rs.data = rtdata.Data;
+                if (rtdata.Status !== undefined) rs.Status = rtdata.Status;
+                if (rtdata.Error !== undefined) rs.Error = rtdata.Error;
+                if (rtdata.Message !== undefined) rs.Message = rtdata.Message;
+                if (rtdata.Data !== undefined) rs.Data = rtdata.Data;
             } catch (ex) {
-                rs.error = ex.message;
+                rs.Error = ex.message;
             }
         
 
@@ -60,7 +60,7 @@ export async function GetData(requestUrl, params, userstate) {
 
                 if (Router.pathname != "/login") {
                     Cookies.set("redirect_login", Router.pathname)
-                    Router.push("/login")
+                    SafeRedirect("/login")
                 }
 
             }
@@ -81,33 +81,35 @@ export function Log(message) {
 export async function checkAuth(login_redirect, userstate) {
     //becarefull to use dispatch here, it's maybe become an fewer hook error
     const dispatch = useDispatch()
-    let rs = { status: 0, error: "not auth", message: "", data: {} }
+    let rs = { Status: 0, Error: "not auth", Message: "", Data: {} }
     const sex = Cookies.get('sex');
     var isLogin = false
     
-    if (!userstate.name) {
+    if (!userstate.username) {
         
         if (sex) {            
             //call request to check auth for this session
             const res = await GetData("aut", "t", userstate)
 
-            //const datatext = await res.();
-            console.log("data", res)
-
-            // .then(data=>{                
-            if (res.status === 1) {
-                isLogin = true;
+            // .then(data=>{      
+                console.log("data return:",res)          
+            if (res.Status === 1) {
+                
                 rs = res
+                console.log("data return:",rs)
                 try {
-                    rs.data = JSON.parse(rs.data)
-                    dispatch({
-                        type: 'USER',
-                        data: rs.data
-                    })
+                    rs.data = JSON.parse(rs.Data)
+                    if(rs.data.username!=""){
+                        isLogin=true
+                        dispatch({
+                            type: 'USER',
+                            data: rs.data
+                        })
+                    }
                 } catch (e) {
-                    rs.status = 0;
-                    rs.data = {};
-                    rs.error = e.message
+                    rs.Status = 0;
+                    rs.Data = {};
+                    rs.Error = e.message
                 }
             }
         }
@@ -124,9 +126,18 @@ export async function checkAuth(login_redirect, userstate) {
         //   })
         
         Cookies.set("redirect_login",login_redirect)
-        typeof window !== 'undefined' && Router.push("/login");
+        SafeRedirect("/login")
 
     }
     return Promise.resolve(rs);
 
+}
+
+export function SafeRedirect(redirect){
+    if(typeof window !== 'undefined'){
+        Router.push(redirect)
+    }else{
+        //wait 100ms to page fully render
+        setTimeout(()=>{SafeRedirect(redirect)},100)
+    }
 }
