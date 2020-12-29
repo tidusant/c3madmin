@@ -67,7 +67,7 @@ export default function Orders() {
             if (rs.Status === 1) {
               try {
                 const data = JSON.parse(rs.Data)
-                setState({ ...state, isLoading: false, nextAction: "", orders: data })
+                setState({ ...state, isLoading: false, nextAction: "", ...data })
               } catch (e) {
                 toast.error(e.message)
               }
