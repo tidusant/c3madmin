@@ -1,6 +1,7 @@
 import Link from 'next/link'
-
+import { useSelector } from 'react-redux'
 export default function Sidebar() {
+    const userstate = useSelector((state) => state)
     return <aside className="al-sidebar" >
     <ul className="al-sidebar-list" >
         <li  className="al-sidebar-list-item">
@@ -37,6 +38,34 @@ export default function Sidebar() {
 </svg>
 </i>
                     <span>Pages</span></a>
+            </Link>
+
+        </li>
+        {userstate.modules.includes("c3m-lptpl-admin")&&
+        <li className="al-sidebar-list-item">
+            <Link href="/lptemplates" >
+                <a className="al-sidebar-list-link">
+                    
+                <i>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+</svg>
+</i>
+                    <span>LPtemplate</span></a>
+            </Link>
+
+        </li>
+}
+        <li className="al-sidebar-list-item">
+            <Link href="/logout" >
+                <a className="al-sidebar-list-link">
+                    
+                <i>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+</svg>
+</i>
+                    <span>Logout</span></a>
             </Link>
 
         </li>

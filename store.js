@@ -9,6 +9,8 @@ const initialState = {
   name:"",
   username: "",
   shop:"",
+  group:"",
+  modules:[],
   login_redirect:"/",
 }
 
@@ -33,7 +35,9 @@ const reducer = (state = initialState, action) => {
           return {
             ...state,
             username: action.data.username,
-            token: action.data.sex
+            token: action.data.sex||state.token,
+            group: action.data.group||state.group,
+            modules:action.data.modules.split(",")
           }
     default:
       return state

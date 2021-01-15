@@ -12,35 +12,19 @@ import humanizeString from "humanize-string"
 export default function Pages() {
   const userstate = useSelector((state) => state)
   const [state, setState] = useState({
-    isRender: false,
-    isLoading: false,
+    
+    isLoading: true,
     nextAction: "get", 
     
     payload: {}
   })
-  //alway check auth before render
-  checkAuth("/", JSON.parse(JSON.stringify(userstate)))
-
-  //=========== event handler:
 
 
+  if (!userstate.username) {
+    checkAuth("/", JSON.parse(JSON.stringify(userstate)))
+    return <></>
+  }else{
 
-  //=========================
-
-
-  if (userstate.username) {
-
-    //====== all the run once logic code should go here
-    if (!state.isRender) {
-      setState({ ...state, isRender: true, isLoading: true })
-
-    }
-    //=============================
-
-    //=============other normal function here
-    //check the page action, this will loop until page action is empty or error return
-    //and this is run only when isLoading=true
-    console.log(state);
 
     if (state.isLoading) {
       switch (state.nextAction) {
@@ -80,7 +64,7 @@ export default function Pages() {
         default: setState({ ...state, nextAction: "", isLoading: false });
       }
     }
-  }
+  
   //=============
 
   return (
@@ -124,7 +108,7 @@ export default function Pages() {
       
     </Layout>
   )
-
+    }
 
 }
 

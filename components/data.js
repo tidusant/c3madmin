@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 export async function GetData(requestUrl, params, userstate) {
     //cannot use dispatch in this function
     let rs = { Status: 0, Error: "", Message: "", Data: {} }
-    let sex = Cookies.get("sex")
+    let sex = Cookies.get("_s")
 
     if ((sex === undefined || sex === "") && requestUrl !== "CreateSex") {
         rs.Status = 0;
@@ -55,7 +55,7 @@ export async function GetData(requestUrl, params, userstate) {
             //update session if request success
 
             if (rtdata.Status === 1) {
-                if (userstate.token) Cookies.set("sex", encDat2(userstate.token), { expires: 1 / (24 * 2) });
+                if (userstate.token) Cookies.set("_s", encDat2(userstate.token), { expires: 1 / (24 * 2) });
             } else if (rtdata.Status === -1) {
 
                 if (Router.pathname != "/login") {
@@ -66,7 +66,7 @@ export async function GetData(requestUrl, params, userstate) {
             }
         
         } catch (error) {
-            rs.error = "Error:" + error.message;
+            rs.Error = error.message;
         }
     }
     return Promise.resolve(rs);
@@ -82,7 +82,7 @@ export async function checkAuth(login_redirect, userstate) {
     //becarefull to use dispatch here, it's maybe become an fewer hook error
     const dispatch = useDispatch()
     let rs = { Status: 0, Error: "not auth", Message: "", Data: {} }
-    const sex = Cookies.get('sex');
+    const sex = Cookies.get('_s');
     var isLogin = false
     
     if (!userstate.username) {
@@ -92,18 +92,16 @@ export async function checkAuth(login_redirect, userstate) {
             const res = await GetData("aut", "t", userstate)
 
             // .then(data=>{      
-                console.log("data return:",res)          
+                     
             if (res.Status === 1) {
-                
-                rs = res
-                console.log("data return:",rs)
+                rs = res                
                 try {
-                    rs.data = JSON.parse(rs.Data)
-                    if(rs.data.username!=""){
-                        isLogin=true
+                    rs.Data = JSON.parse(rs.Data)
+                    if(rs.Data.username!=""){
+                        isLogin=true                        
                         dispatch({
                             type: 'USER',
-                            data: rs.data
+                            data: rs.Data
                         })
                     }
                 } catch (e) {
@@ -116,7 +114,7 @@ export async function checkAuth(login_redirect, userstate) {
         //     });
         //}
     }else{
-        rs.status=1
+        rs.Status=1
         isLogin=true
     }
     if (!isLogin) {

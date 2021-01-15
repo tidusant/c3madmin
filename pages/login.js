@@ -13,7 +13,7 @@ export default function Login() {
   const [password, setPassword] = React.useState('');
   const dispatch = useDispatch()
   const [state, setState] = useState({
-    isRender: false,
+    isFirstCall: true,
     isLoading: false,
     nextAction: "get",
     message: "",
@@ -26,10 +26,14 @@ export default function Login() {
 
   };
   //====== all the run once logic code should go here
-  if (!state.isRender) {
-    setState({ ...state, isRender: true, isLoading: true })
-
-  }
+  if (state.isFirstCall) {
+    
+    // dispatch({
+    //   type: 'LOGOUT'
+    // })
+    setState({ ...state, isFirstCall: false, isLoading: true })
+    return <></>
+  }else{
   //=============================
 
   //=============other normal function here
@@ -51,9 +55,14 @@ export default function Login() {
               console.log('will', data)
               if (data.Status === 1) {
 
-                Cookies.set("sex", encDat2(data.Data), { expires: 1 / (24 * 2) });
+                Cookies.set("_s", encDat2(data.Data), { expires: 1 / (24 * 2) });
                 setState({ ...state, isLoading: false, nextAction: "" })
                 //dispatch(...appstate,{})    
+                dispatch({
+                  type: 'SEX',
+                  data: data.Data
+                })
+
               } else {
 
                 setState({ ...state, isLoading: false, nextAction: "", message: data.Error })
@@ -159,6 +168,7 @@ export default function Login() {
       </div>
 
     )
+              }
   // }
   // return <></>
 }
